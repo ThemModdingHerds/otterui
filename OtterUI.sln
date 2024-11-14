@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.002.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OtterUI", "OtterUI\OtterUI.csproj", "{5303F639-B6C1-4822-B9EF-A40A85D6D528}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5303F639-B6C1-4822-B9EF-A40A85D6D528}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5303F639-B6C1-4822-B9EF-A40A85D6D528}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5303F639-B6C1-4822-B9EF-A40A85D6D528}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5303F639-B6C1-4822-B9EF-A40A85D6D528}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {86D25B26-CF81-4A82-96C7-40B390D95767}
+	EndGlobalSection
+EndGlobal
