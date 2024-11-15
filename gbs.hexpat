@@ -15,7 +15,7 @@ struct ControlLayout
     float mHeight;
 
     float mRotation;
-};
+}; // 36 bytes
 
 struct ControlData
 {
@@ -31,7 +31,7 @@ struct ControlData
 
     u32 mAnchorFlags;
     s32 mMaskID;
-};
+}; // 112 bytes
 
 struct KeyFrameData
 {
@@ -54,7 +54,7 @@ struct KeyFrameData
 
     float mBottomAbs;
     float mBottomRel;
-};
+}; // 52
 
 // https://github.com/ppiecuch/OtterUI/blob/master/API/src/Data/OtterData.h
 
@@ -62,27 +62,29 @@ struct ActionData
 {
     char mFourCC[4];
     u32 mDataSize;
-};
+}; // 8
 
 // MSGA
 struct MessageActionData : ActionData
 {
     u32 mMessageID;
-};
+}; // 12
 
 // SNDA
 struct SoundActionData : ActionData
 {
     u32 mSoundID;
     float mVolume;
-};
+}; // 16
 
+// SPLT
 struct SpriteLayout : ControlLayout
 {
     u32 mColor;
     float mSkew;
-};
+}; // 44
 
+// GSPR
 struct SpriteData : ControlData
 {
     s32 mTextureID;
@@ -91,8 +93,9 @@ struct SpriteData : ControlData
     u32 mFlipType;
     u32 mNumControls;
     ControlData mBuffer[mNumControls];
-};
+}; // 132
 
+// LBLT
 struct LabelLayout : ControlLayout
 {
     u32 mColor;
@@ -100,8 +103,9 @@ struct LabelLayout : ControlLayout
     float mScaleY;
     float mSkew;
     float mDropShadow;
-};
+}; // 48
 
+// GLBL
 struct LabelData : ControlData
 {
     u32 mFontID;
@@ -119,11 +123,13 @@ struct LabelData : ControlData
     char mBuffer[mTextBufferSize];
 };
 
+// BTLT
 struct ButtonLayout : ControlLayout
 {
 
-};
+}; // 36
 
+// GBTT
 struct ButtonData : ControlData
 {
     u32 mDefaultTextureID;
@@ -141,35 +147,41 @@ struct ButtonData : ControlData
     u32 mTextBufferSize;
     char mBuffer[mTextBufferSize];
     ActionData mBuffer2[mNumOnClickActions];
-};
+}; // 156
 
+// GPLT
 struct GroupLayout : ControlLayout
 {
     u32 mColor;
 };
 
+// GGRP
 struct GroupData : ControlData
 {
     u32 mNumControls;
     ControlData mBuffer[mNumControls];
 };
 
+// TBLT
 struct TableLayout : ControlLayout
 {
 
-};
+}; // 36
 
+// GTBL
 struct TableData : ControlData
 {
     u32 mDefaultRowHeight;
     u32 mRowSpacing;
 };
 
+// TGLT
 struct ToggleLayout : ControlLayout
 {
     u32 mColor;
 };
 
+// GTGL
 struct ToggleData : ControlData
 {
     s32 mOnTextureID;
@@ -177,11 +189,13 @@ struct ToggleData : ControlData
     u32 mColor;
 };
 
+// SLLT
 struct SliderLayout : ControlLayout
 {
     u32 mColor;
 };
 
+// GSLD
 struct SliderData : ControlData
 {
     u32 mThumbWidth;
@@ -200,11 +214,13 @@ struct SliderData : ControlData
     u32 mColor;
 };
 
+// SPLT
 struct MaskLayout : ControlLayout
 {
     float mSkew;
 };
 
+// GMSK
 struct MaskData : ControlData
 {
     s32 mTextureID;
@@ -250,8 +266,11 @@ struct AnimationData
     u32 mNumMainChannelFrames;
     
     u32 mMainChannelFramesOffset;
+
+    u64 _offset = $;
+
     AnimationChannelData mBuffer[mNumAnimationChannels];
-    MainChannelFrameData mBuffer2[mNumFrames] @ sizeof(this) + mMainChannelFramesOffset;
+    MainChannelFrameData mBuffer2[mNumMainChannelFrames] @ _offset + mMainChannelFramesOffset;
 };
 
 // GGAL
@@ -265,6 +284,7 @@ struct AnimationListData
 
 };
 
+// GGVW
 struct ViewData : ControlData
 {
     u32 mNumTextures;
@@ -275,12 +295,15 @@ struct ViewData : ControlData
     u32 mSoundsOffset;
     u32 mControlsOffset;
     u32 mAnimationListOffset;
-    AnimationListData mBuffer @ sizeof(this) + mAnimationListOffset;
+
+    u64 _offset = $;
+
+    AnimationListData mBuffer @ _offset + mAnimationListOffset;
     // Texture IDs
-    s32 mBuffer2[mNumTextures] @ sizeof(this) + mTexturesOffset;
+    s32 mBuffer2[mNumTextures] @ _offset + mTexturesOffset;
     // Sound IDs
-    s32 mBuffer3[mNumSounds] @ sizeof(this) + mSoundsOffset;
-    ControlData mBuffer4[mNumControls] @ sizeof(this) + mControlsOffset;
+    s32 mBuffer3[mNumSounds] @ _offset + mSoundsOffset;
+    ControlData mBuffer4[mNumControls] @ _offset + mControlsOffset;
 };
 
 struct TextureRect
@@ -323,9 +346,11 @@ struct GlyphData
 
 struct MessageData
 {
-
+    u32 mID;
+    char mText[64];
 };
 
+// GFNT
 struct FontData
 {
     char mFourCC[4];
@@ -336,6 +361,7 @@ struct FontData
     u32 mFontSize;
     u32 mFontWidth;
     u32 mFontHeight;
+
     u32 mMaxTop;
     u32 mNumTextures;
     u32 mNumGlyphs;
@@ -363,11 +389,13 @@ struct SceneData
     u32 mViewsOffset;
     u32 mMessageOffset;
 
-    FontData mBuffer[mNumFonts] @ 56 + mFontsOffset;
-    TextureData mBuffer2[mNumTextures] @ 56 + mTexturesOffset;
-    SoundData mBuffer3[mNumSounds] @ 56 + mSoundsOffset;
-    ViewData mBuffer4[mNumViews] @ 56 + mViewsOffset;
-    MessageData mBuffer5[mNumViews] @ 56 + mMessageOffset;
+    u64 _offset = $;
+
+    FontData mBuffer[mNumFonts] @ _offset + mFontsOffset;
+    TextureData mBuffer2[mNumTextures] @ _offset + mTexturesOffset;
+    SoundData mBuffer3[mNumSounds] @ _offset + mSoundsOffset;
+    ViewData mBuffer4[mNumViews] @ _offset + mViewsOffset;
+    MessageData mBuffer5[mNumViews] @ _offset + mMessageOffset;
 };
 
 SceneData scene @ $;

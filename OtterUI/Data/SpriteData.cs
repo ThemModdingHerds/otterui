@@ -1,9 +1,11 @@
 using System.Text.Json.Serialization;
 using ThemModdingHerds.IO.Binary;
+using ThemModdingHerds.OtterUI.Base;
 
-namespace ThemModdingHerds.OtterUI;
-public class SpriteData(ControlData controlData,int mTextureID,uint mColor,float mSkew,uint mFlipType,IEnumerable<ControlData> mControls) : ControlData(controlData.FourCC,controlData.DataSize,controlData.ID,controlData.Name,controlData.Position,controlData.Center,controlData.Size,controlData.Rotation,controlData.AnchorFlags,controlData.MaskID)
+namespace ThemModdingHerds.OtterUI.Data;
+public class SpriteData(uint mDataSize,ControlData controlData,int mTextureID,uint mColor,float mSkew,uint mFlipType,IEnumerable<ControlData> mControls) : ControlData(FOURCC,mDataSize,controlData)
 {
+    public const string FOURCC = "GSPR";
     [JsonPropertyName("mTextureID")]
     public int TextureID {get;set;} = mTextureID;
     [JsonPropertyName("mColor")]
@@ -14,7 +16,12 @@ public class SpriteData(ControlData controlData,int mTextureID,uint mColor,float
     public uint FlipType {get;set;} = mFlipType;
     [JsonPropertyName("mControls")]
     public List<ControlData> Controls {get;set;} = [..mControls];
-    public SpriteData(ControlData controlData,int mTextureID,uint mColor,float mSkew,uint mFlipType): this(controlData,mTextureID,mColor,mSkew,mFlipType,[])
+    public new const int BYTES = ControlData.BYTES + 20;
+    public SpriteData(uint mDataSize,ControlData controlData,int mTextureID,uint mColor,float mSkew,uint mFlipType): this(mDataSize,controlData,mTextureID,mColor,mSkew,mFlipType,[])
+    {
+
+    }
+    public SpriteData(): this(0,new(),0,0,0,0)
     {
 
     }
@@ -32,7 +39,7 @@ public static class SpriteDataExt
         List<ControlData> controls = [];
         for(uint i = 0;i < mNumControls;i++)
             controls.Add(ControlData.Read(reader));
-        return new(controlData,mTextureID,mColor,mSkew,mFlipType,controls);
+        return new(controlData.DataSize,controlData,mTextureID,mColor,mSkew,mFlipType,controls);
     }
     public static void Write(this Writer writer,SpriteData spriteData)
     {
